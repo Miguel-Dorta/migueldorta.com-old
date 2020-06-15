@@ -1,28 +1,32 @@
-const webpack = require('webpack');
+const webpack = require('webpack')
   path = require('path'),
-  ExtractTextPlugin = require("extract-text-webpack-plugin"),
+  ExtractTextPlugin = require('extract-text-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   CopyWebpackPlugin = require('copy-webpack-plugin'),
-  CompressionPlugin = require("compression-webpack-plugin")
+  CompressionPlugin = require('compression-webpack-plugin'),
+  MiniCssExtractPlugin = require('mini-css-extract-plugin'),
+  isProduction = process.argv.indexOf('-p') !== -1 // Check if we are in production mode
 
-  isProduction = process.argv.indexOf('-p') !== -1, // Check if we are in production mode
-  extractStyles = new ExtractTextPlugin('styles.css');
-
-const BUILD_DIR = path.resolve(__dirname, 'dist');
-const APP_DIR = path.resolve(__dirname, 'src');
+const BUILD_DIR = path.resolve(__dirname, 'dist')
+const APP_DIR = path.resolve(__dirname, 'src')
 
 module.exports = env => {
   const config = {
-    devtool: isProduction ? undefined : 'cheap-module-source-map',  
+    mode: isProduction ? 'production' : 'development',
     entry: {
-      'main': APP_DIR + '/index.jsx',
-      'vendor': [
-        'preact',
-        'preact-compat',
-        'react-ink',
-        'react-router-dom',
-        'lang'
-      ]
+      'main': APP_DIR + '/index.jsx'
+    },
+    target: 'web',
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            test: /preact|preact-compat|react-ink|react-router-dom/,
+            chunks: 'initial',
+            name: 'vendor'
+          }
+        }
+      }
     },
     output: {
       path: BUILD_DIR,
@@ -39,80 +43,80 @@ module.exports = env => {
       hot: true,
       inline: true
     },
-    module : {
-      loaders : [
+    module: {
+      rules: [
         {
-          test : /\.jsx?$/,
-          include : APP_DIR,
-          loader : 'babel-loader'
+          test: /\.jsx?$/,
+          include: APP_DIR,
+          loader: 'babel-loader'
         },
         {
           test: /\.scss$/,
-          use: isProduction ? extractStyles.extract({
-            fallback: 'style-loader',
             use: [
+              MiniCssExtractPlugin.loader,
               {
-                loader: 'css-loader',
+                loader: 'css-loader'
               },
               {
-                loader: 'postcss-loader',
+                loader: 'postcss-loader'
               },
               {
-                loader: 'sass-loader',
-              },
-            ],
-          }) : ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
-        },
+                loader: 'sass-loader'
+              }
+            ]
+          },
         {
           test: /\.(png|jpg|jpeg|gif|svg|ico|xml)$/,
           loader: 'file-loader',
           options: {
-            name: 'assets/[name].[ext]?[hash]',
-          },
-        },
+            name: 'assets/[name].[ext]?[hash]'
+          }
+        }
       ]
     },
-    "resolve": {
-      "alias": {
-        "react": "preact-compat",
-        "react-dom": "preact-compat"
+    'resolve': {
+      'alias': {
+        'react': 'preact-compat',
+        'react-dom': 'preact-compat'
       },
-      "modules": [
+      'modules': [
         APP_DIR + '/assets/lang/',
         'node_modules'
       ]
     },
     plugins: [
-      new webpack.DefinePlugin({
-        'process.env': {
-          'NODE_ENV': isProduction ? JSON.stringify('production') : JSON.stringify('development')
-        }
+      new MiniCssExtractPlugin({
+        filename: '[name]-[hash:6].css',
+        chunkFilename: '[name]-[hash:6].css',
+        cssModules: true,
+        hot: true
       }),
-      isProduction ? extractStyles : new webpack.HotModuleReplacementPlugin(),
+      new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new HtmlWebpackPlugin({
         minify: {
-          collapseWhitespace: true,
+          collapseWhitespace: true
         },
         hash: true,
-        template: './src/index.html',
-      }),
-      new webpack.optimize.CommonsChunkPlugin("vendor")
-    ],
-  };
+        template: './src/index.html'
+      })
+    ]
+  }
 
-  if(isProduction) {
+  if (isProduction) {
     config.plugins[config.plugins.length] = new CopyWebpackPlugin([
-      { from: path.join(__dirname, 'src', 'assets', 'icons'), to: path.join(__dirname, 'dist', 'assets', 'icons') }
-    ]);
+      { from: path.join(__dirname, 'src', 'assets', 'icons'), to: path.join(__dirname, 'dist', 'assets', 'icons') },
+      { from: path.join(__dirname, 'src', 'assets', 'lang'), to: path.join(__dirname, 'dist', 'assets', 'lang') },
+      { from: path.join(__dirname, 'src', 'config.js'), to: path.join(__dirname, 'dist', 'config.js') }
+    ])
   }
 
-  if(env && env.compress) {
+  if (env && env.compress) {
     config.plugins[config.plugins.length] = new CompressionPlugin({
-      algorithm: "gzip",
+      algorithm: 'gzip',
       test: /\.(html|js|css|png|jpg|json|svg|xml)$/
-    });
+    })
   }
 
-  return config;
+  return config
 }

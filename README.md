@@ -3,6 +3,11 @@
 
 A personal website template that's not a pain in the ass to setup and use.
 
+[Demo](https://ptemplate.nethruster.com)
+
+Example screenshot
+![alt text](https://github.com/nethruster/ptemplate/blob/master/src/assets/icons/meta-img.png "Home screenshot")
+
 ### Requirements
 - You need to have `yarn` (**recommended**) or `npm` installed.
 
@@ -24,6 +29,9 @@ A personal website template that's not a pain in the ass to setup and use.
 
 Note: To apply all of these changes you must rebuild the app.
 
+### If you're not hosting the app at the root of the server
+Go to `webpack.config.js` and change the `publicPath` key inside of the `output` part of the config
+
 ### Favicons
 You can replace them at `src/assets/icons/`.
 
@@ -44,3 +52,9 @@ Customize them in the `src/assets/lang/` folder. Add a new lang file named by th
 
 ### Add icons
 Add new icon paths with the desired ID in the `src/assets/icons.svg` file.
+
+## Usage
+Once everything is compiled and built the last step is to serve the contents of the `dist/` folder as static files with your web server of choice and you're done! 
+
+
+[![Run on Repl.it](https://repl.it/badge/github/nethruster/ptemplate)](https://repl.it/github/nethruster/ptemplate)
