@@ -10,6 +10,17 @@ import lang from 'lang';
 
 const langContext = lang.contact;
 
+// This need to be it's own function or webpack optimizes it out of existence
+async function loadTostify() {
+  let toastify = await import(/*webpackChunkName: "toastify"*/'react-toastify');
+  this.setState({ toastify: toastify });
+}
+// This need to be it's own function or webpack optimizes it out of existence
+async function loadRecaptcha() {
+  let ReCAPTCHA = (await import(/*webpackChunkName: "gRecaptcha"*/'preact-grecaptcha')).default;
+  this.setState({ ReCAPTCHA: ReCAPTCHA });
+}
+
 const CloseButton = ({ closeToast }) => (
   <span className="toastify-dismiss" onClick={closeToast}>{langContext.toast.close}</span>
 );
@@ -32,15 +43,9 @@ export default class ContactBody extends React.PureComponent {
     
     this.captcha = null;
 
-    (async function(){
-      let toastify = await import(/*webpackChunkName: "toastify"*/'react-toastify');
-      this.setState({toastify: toastify});
-    }).bind(this)();
+    loadTostify.bind(this)();
 
-    (async function(){
-      let ReCAPTCHA = (await import(/*webpackChunkName: "gRecaptcha"*/'preact-grecaptcha')).default;
-      this.setState({ReCAPTCHA: ReCAPTCHA});
-    }).bind(this)();
+    loadRecaptcha.bind(this)();
 
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onCaptchaChange = this.onCaptchaChange.bind(this);
@@ -155,7 +160,7 @@ export default class ContactBody extends React.PureComponent {
     return (
       <div className="pt-content-card__body pt-content-card__body__contact flex">
       {
-        this.state.ReCAPTCHA ? 
+        this.state.ReCAPTCHA && navigator.userAgent != "ReactSnap" ? 
           <this.state.ReCAPTCHA
             ref={(el) => {this.captcha = el}}
             className="recaptcha"

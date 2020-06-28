@@ -72,28 +72,30 @@ const projects = [
     img: '',
     description: 'Lorem ipsum dolor sit amet, in nulla hendrerit ius, sed et congue graeci, qui id propriae accusata.',
     categories: ['Sample', 'Open source', 'React'],
-    siteUrl: 'amazing.project.com',
-    sourceCodeUrl: 'github.com/user/project'
+    siteUrl: 'https://amazing.project.com',
+    sourceCodeUrl: 'https://github.com/user/project'
   },
   {
     title: 'Project Title #2',
     img: 'https://www.nethruster.com/assets/img/icons/apple-touch-icon.png',
     description: 'Lorem ipsum dolor sit amet, in nulla hendrerit ius, sed et congue graeci, qui id propriae accusata.',
     categories: ['Sample', 'Freeware', 'Go'],
-    siteUrl: 'amazing.project.com'
+    siteUrl: 'https://amazing.project.com'
   },
   {
     title: 'Project Title #3',
     img: 'https://www.nethruster.com/assets/img/wareader.svg',
     description: 'Lorem ipsum dolor sit amet, in nulla hendrerit ius, sed et congue graeci, qui id propriae accusata.',
     categories: ['Wat', 'Linux', 'LoL'],
-    sourceCodeUrl: 'github.com/user/:O'
+    sourceCodeUrl: 'https://github.com/user/:O'
   }
 ]
 
 const formUrl = 'http://localhost:4000'
 const ReCAPTCHAKey = '6LcBOC8UAAAAAM9YRyBp1RR-1NnwvMU8UDsR63Vu'
-const missingProjectIcon = './assets/no-work-icon.jpg'
+// The basepath is the assets folder
+/// the file sould be imported in assets-import.js
+const missingProjectIcon = 'no-work-icon.jpg'
 
 export {
   profile,
