@@ -71,7 +71,7 @@ const projects = [
   {
     title: 'losfogueteros.com',
     img: 'https://www.losfogueteros.com/assets/icons/apple-touch-icon-precomposed.png',
-    description: 'Web de Los Fogueteros',
+    description: 'Los Fogueteros\' Website',
     categories: ['Nethruster', 'SysAdmin'],
     siteUrl: 'https://www.losfogueteros.com',
   },
