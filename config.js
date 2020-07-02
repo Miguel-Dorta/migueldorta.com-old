@@ -119,7 +119,7 @@ const projects = [
   }
 ]
 
-const formUrl = 'https://europe-west1-forms-cloud-functions.cloudfunctions.net/migueldorta'
+const formUrl = 'https://formsapi.migueldorta.com/migueldorta'
 const ReCAPTCHAKey = '6LfmMTIUAAAAAHERsxifkb_Wx-KvwJ1FGpk1wIZc'
 // The basepath is the assets folder
 /// the file sould be imported in assets-import.js
